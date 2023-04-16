@@ -3,7 +3,7 @@
 ## [Required](https://github.com/jimlin1111/oauth2.0_test#Required) ##
 > python==3.8.8
 ---------------
-## Before active ##
+## [Before active](https://github.com/jimlin1111/oauth2.0_test#before-active) ##
 若使用mysql可將[oauth20/sensitive-sample.py](https://github.com/jimlin1111/oauth2.0_test/blob/master/oauth20/sensitive-sample.py)
 複製成**oauth20/sensitive.py**並填入必要資訊  
 
@@ -12,7 +12,7 @@
 <font color=#FF0000>*註解後啟動專案時會在根目錄多一個 **db.sqlite3** 檔案</font>
 
 ----------
-## How to active ##
+## [How to active](https://github.com/jimlin1111/oauth2.0_test#how-to-active) ##
 開好python虛擬環境後在根目錄下打下面指令  
 
 mac、Linux :
