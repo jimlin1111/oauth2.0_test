@@ -1,0 +1,10 @@
+db.sqlite3
+sensitive.py
+migrations
+__pycache__
+media/*
+.DS_Store
+*/.DS_Store
+cache
+/static/css/**/*.css
+/static/css/**/*.css.map

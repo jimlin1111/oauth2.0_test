@@ -1,0 +1,28 @@
+{% extends 'auth/base.html' %}
+{% load sass_tags %}
+{% load static %}
+
+{% block title %}登入{% endblock %}
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% sass_src 'css/auth/login.scss' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-title">Login</div>
+        <div class="card-body">
+            <button class="linelogin">
+                <div class="linelogo">
+                    <img src="{% static '' %}img/line_88.png" alt="...">
+                </div>
+                <div class="linetext">
+                    Log in with LINE
+                </div>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}{% endblock %}
