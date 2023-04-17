@@ -11,3 +11,10 @@ DATABASES = {
         }
     }
 }
+
+CHANNEL_ABOUT = {
+    'channel_id': '', # enter your line login channel id
+    'channel_secret': '', # enter your line login channel secret
+    'notify_id': '', # enter your line notify channel id
+    'notify_secret': '' # enter your line notify channel secret
+}
