@@ -16,10 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from login.views import LoginView
+from login.views import (
+    LoginView,
+    LineLoginCallbackView,
+    NotifyOauthView,
+)
 
 app_name = 'auth'
 
 urlpatterns = [
-    path('login', LoginView.as_view(), name='login')
+    path('login', LoginView.as_view(), name='login'),
+    path('callback', LineLoginCallbackView.as_view(), name='callback'),
+    path('notify/callback', NotifyOauthView.as_view(), name='notifycallback')
 ]

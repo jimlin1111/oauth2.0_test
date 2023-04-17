@@ -1,0 +1,174 @@
+{% extends 'layout/base.html' %}
+{% load sass_tags %}
+{% load static %}
+
+{% block title %}
+首頁
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'css/index/index.scss' %}">
+<style>
+    .select2-selection__rendered {
+        line-height: 50px !important;
+    }
+    .select2-container .select2-selection--single {
+        height: 50px !important;
+    }
+    .select2-selection__arrow {
+        height: 50px !important;
+    }
+    .select2-selection__choice__remove {
+        line-height: 50px!important;
+    }
+    .select2-search__field {
+        height: 50px!important;
+        line-height: 50px!important;
+        font-size: 2rem!important;
+    }
+    .select2-results__option {
+        height: 30px!important;
+        line-height: 30px!important;
+        font-size: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="substatus">
+        <span class="text">Line Notify 訂閱狀態：</span>
+        <span class="nosub {% if subscribe == True %}alreadystatus{% endif %}"><i class='bx {% if subscribe == True %}bx-check{% else %}bx-x{% endif %} togglecheck'></i>{% if subscribe == True %}已訂閱{% else %}沒有訂閱{% endif %}</span>
+    </div>
+    <div class="clicksub">
+        <span class="text">點擊{% if subscribe == True %}取消{% endif %}訂閱<i class='bx bxs-right-arrow-alt'></i></span>
+        <button id="subscribe" class="subscribe" data-action="{% if subscribe == True %}cancel{% else %}subscribe{% endif %}"><i class='bx {% if subscribe == True %}bx-bell-off{% else %}bx-bell{% endif %} toggle'></i></button>
+    </div>
+    {% if subscribe == True %}
+    <hr>
+    <div class="scribe_location">
+        <p class="text">您可於此訂閱您想要的城市</p>
+        <p class="text">我們將於每天早上８點整發送今日天氣預報：</p>
+        <select name="location" id="city" class="city" multiple>
+            <option value="">請選擇您想要的城市</option>
+            {% for city in citys %}
+            {% if city.sn in citys_refer %}
+            <option value="{{ city.sn }}" selected>{{ city.name }}</option>
+            {% else %}
+            <option value="{{ city.sn }}">{{ city.name }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+        <br>
+        <button id="cityadd" class="subscribe" data-action="addcity">送出預報訂閱</button>
+        <button id="citycancel" class="subscribe cancel" data-action="cancelcity">取消預報訂閱</button>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".city").select2({
+            language: 'zh-TW',
+            width: '75%',
+            // 最多字元限制
+            maximumInputLength: 10,
+            // 最少字元才觸發尋找, 0 不指定
+            minimumInputLength: 0,
+            // 當找不到可以使用輸入的文字
+            tags: false,
+        })
+        $("#subscribe").click(function() {
+            $(this).attr('disabled',true);
+            var action = $(this).data('action');
+            $(".toggle").removeClass('bx-bell');
+            $(".toggle").addClass('bx-bell-off');
+            $.ajax({
+                method: 'post',
+                url: '{% url "index" %}',
+                data: {'action':action},
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function(ret) {
+                    console.log(ret)
+                    $(".toggle").addClass('bx-bell');
+                    $(".toggle").removeClass('bx-bell-off');
+                    $("#subscribe").attr('disabled', false);
+                    if (action == 'cancel') {
+                        $(location).attr('href', '{% url "index" %}');
+                    } else {
+                        $(location).attr('href', ret.result)
+                    }
+                }
+
+            })
+        })
+        $("#cityadd").click(function(){
+            var city_list = $("#city").val();
+            console.log(city_list)
+            $.ajax({
+                method: 'post',
+                url: '{% url "api:citypost" %}',
+                data: {'city_list':city_list},
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function(ret) {
+                    if (ret.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '訂閱成功',
+                            text: ret.msg,
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $(location).attr('href','{% url "index" %}');
+                            }
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title:'發生錯誤',
+                            text: ret.msg,
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        }).then((result) => {
+                            return false;
+                        })
+                    }
+                }
+            })
+        })
+        $("#citycancel").click(function(){
+            $.ajax({
+                method: 'delete',
+                url: '{% url "api:citypost" %}',
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function(ret) {
+                    if (ret.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '取消成功',
+                            text: ret.msg,
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $(location).attr('href','{% url "index" %}');
+                            }
+                        })
+                    }
+                }
+            })
+        })
+    })
+</script>
+{% endblock %}

@@ -1,5 +1,5 @@
 .container {
-    min-height: 400px;
+    height: 400px;
     min-width: 35%;
     position: absolute;
     top: 50%;
@@ -10,25 +10,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    &::after {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100%;
-        height: 100%;
-        content: '';
-        z-index: -1;
-        background-color: rgba(0, 0, 0, .7);
-        filter: blur(2px);
-        border-radius: 10px;
-    }
+    background-color: rgba(0, 0, 0, .7);
+    border-radius: 10px;
     .card {
+        height: 100%;
         color: #FFFFFF;
         padding: 30px 25px;
         width: 100%;
         border-radius: 15px;
+        position: relative;
         .card-title {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translate(-50%,-50%);
             font-size: 3rem;
             line-height: 3rem;
             font-weight: 700;
@@ -37,14 +32,19 @@
             margin-bottom: 30px;
         }
         .card-body {
-            height: 300px;
+            position: absolute;
+            top: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            // height: 300px;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             .linelogin {
                 border: none;
                 outline: none;
-                width: 60%;
+                width: 80%;
                 height: 88px;
                 padding: 0;
                 background-color: #06C755;
@@ -60,7 +60,7 @@
                 }
                 .linetext {
                     width: 100%;
-                    font-size: 30px;
+                    font-size: 1.5rem;
                     padding: 44px 88px;
                 }
                 &::after {
@@ -82,6 +82,40 @@
                 &:active {
                     &::after {
                         background-color: rgba(0, 0, 0, .3);
+                    }
+                }
+            }
+        }
+        .card-footer {
+            position: absolute;
+            width: 100%;
+            bottom: 30px;
+            left: 0;
+            .gotoback {
+                a {
+                    text-decoration: none;
+                    color: #FFFFFF;
+                    position: relative;
+                    font-size: 1.3rem;
+                    transition: font-size .5s ease;
+                    &::after {
+                        position: absolute;
+                        content: '';
+                        width: 100%;
+                        height: 3px;
+                        border-radius: 3px;
+                        transform: scale(0);
+                        background-color: #FFFFFF;
+                        bottom: -5px;
+                        left: 0;
+                        transition: transform .5s ease;
+                    }
+                    &:hover {
+                        font-size: 1.5rem;
+                        &::after {
+                            transform: scale(1);
+                            transform-origin: left;
+                        }
                     }
                 }
             }

@@ -1,0 +1,39 @@
+{% load sass_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/spinner.scss' %}">
+    <title>callback</title>
+</head>
+<body>
+    <div class="overlay show"></div>
+    <div class="spanner show">
+        <div class="loader"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function(){
+            var success = "{{ success }}"
+            var msg = "{{ msg }}"
+            if (success === 'True') {
+                Swal.fire({
+                    icon: 'success',
+                    title: '登入成功',
+                    text: msg,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(location).attr('href','{% url "index" %}');
+                    }
+                })
+            }
+        })
+    </script>
+</body>
+</html>

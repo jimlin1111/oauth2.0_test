@@ -1,0 +1,28 @@
+{% load sass_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/cssreset.scss' %}">
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/layout/layout.scss' %}">
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/layout/header.scss' %}">
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/layout/footer.scss' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>{% block title %}{% endblock %}</title>
+    {% block style %}{% endblock %}
+</head>
+<body>
+    {% include 'layout/header.html' %}
+    <div class="main">
+        {% block content %}{% endblock %}
+    </div>
+    {% include 'layout/footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% block js %}{% endblock %}
+</body>
+</html>

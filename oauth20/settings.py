@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'oauth20.contexts.return_username'
             ],
         },
     },
@@ -144,5 +145,15 @@ SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR,'static')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LINE_BASEURL_DICT = {
+    'get_authorize': 'https://access.line.me/oauth2/v2.1/authorize',
+    'get_access_token': 'https://api.line.me/oauth2/v2.1/token',
+    'profile_verify': 'https://api.line.me/oauth2/v2.1/verify',
+    'notify_authorize': 'https://notify-bot.line.me/oauth/authorize',
+    'notify_get_token': 'https://notify-bot.line.me/oauth/token',
+    'notify_send_message': 'https://notify-api.line.me/api/notify',
+    'notify_cancel':'https://notify-api.line.me/api/revoke',
+}
 
 from oauth20.sensitive import *

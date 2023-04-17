@@ -12,7 +12,7 @@
     <div class="card">
         <div class="card-title">Login</div>
         <div class="card-body">
-            <button class="linelogin">
+            <button class="linelogin" id="linelogin">
                 <div class="linelogo">
                     <img src="{% static '' %}img/line_88.png" alt="...">
                 </div>
@@ -21,8 +21,32 @@
                 </div>
             </button>
         </div>
+        <div class="card-footer">
+            <div class="gotoback">
+                <a href="#">後台登入</a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
 
-{% block js %}{% endblock %}
+{% block js %}
+<script>
+    $(document).ready(function(){
+        $("#linelogin").click(function(){
+            $.ajax({
+                method: 'post',
+                url: "{% url 'auth:login' %}",
+                data: {'action':'auth'},
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function(ret) {
+                    console.log(ret)
+                    $(location).attr('href', ret.result)
+                }
+            })
+        })
+    })
+</script>
+{% endblock %}
