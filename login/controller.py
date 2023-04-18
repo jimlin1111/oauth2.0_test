@@ -127,7 +127,7 @@ class NotifySubScribe:
             'user_id':user_id,
             'who_send':'system',
             'message': '哈囉，歡迎使用我的網站訂閱Line Notify \U0001F604',
-            'send_time': arrow.utcnow().to('Asia/Taipei').format('YYYY-MM-DDTHH:mm:ss')
+            'send_time': arrow.utcnow().to('Asia/Taipei').shift(hours=8).format('YYYY-MM-DDTHH:mm:ss')
         }
         ret = r.json()
         if ret['status'] == 200:
