@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import requests
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,13 @@ SECRET_KEY = 'django-insecure-6@n6p&@ko&bb%wi#pli)i@fns_$#5!bd^w$e(uew0s*g=$fcm+
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+if DEBUG:
+    response = requests.get('http://localhost:4040/api/tunnels')
+    BASE_URL = response.json()['tunnels'][0]['public_url']
+    print(BASE_URL)
+else:
+    BASE_URL = ''
 
 
 # Application definition

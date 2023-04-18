@@ -66,3 +66,16 @@ class LoginRequired():
         if not request.user.is_authenticated:
             return redirect(reverse('auth:login'))
         return super().dispatch(request, *args, **kwargs)
+
+class SystemSendDetail(models.Model):
+    sn = models.AutoField(primary_key=True)
+    user_id = models.IntegerField()
+    who_send = models.CharField(max_length=16)
+    message = models.CharField(max_length=512)
+    success = models.IntegerField()
+    error_msg = models.CharField(max_length=256, blank=True, null=True)
+    send_time = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'system_send_detail'

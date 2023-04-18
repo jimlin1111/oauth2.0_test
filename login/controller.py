@@ -1,7 +1,8 @@
 from django.conf import settings as st
 import requests
 import urllib.parse
-from login.models import SystemNotify
+from login.models import SystemNotify,SystemSendDetail
+import arrow
 
 class LineLoginClass:
     def __init__(self, action, request, *args, **kwargs):
@@ -9,7 +10,7 @@ class LineLoginClass:
             self.base_url = st.LINE_BASEURL_DICT['get_authorize']
             self.client_id = st.CHANNEL_ABOUT['channel_id']
             self.scope = urllib.parse.quote('openid email profile', safe='')
-            self.redirect_uri = urllib.parse.quote('https://4064-125-228-140-1.ngrok-free.app/auth/callback', safe='')
+            self.redirect_uri = urllib.parse.quote(f'{st.BASE_URL}/auth/callback', safe='')
         elif action == 'get_at':
             self.code = request.GET.get('code')
             self.client_id = st.CHANNEL_ABOUT['channel_id']
@@ -22,15 +23,16 @@ class LineLoginClass:
             self.payload = {
                 'grant_type': 'authorization_code',
                 'code': self.code,
-                'redirect_uri': 'https://4064-125-228-140-1.ngrok-free.app/auth/callback',
+                'redirect_uri': f'{st.BASE_URL}/auth/callback',
                 'client_id': self.client_id,
                 'client_secret': self.secret,
             }
         elif action == 'get_profile':
+            print(kwargs)
             self.verify_url = st.LINE_BASEURL_DICT['profile_verify']
             self.verify_payload = {
-                'id_token': self.token_data['id_token'],
-                'client_id': self.client_id
+                'id_token': kwargs['id_token'],
+                'client_id': kwargs['client_id']
             }
     
     def return_login_info(self):
@@ -55,7 +57,7 @@ class NotifySubScribe:
     def __init__(self, action, request, *argv, **kwargs):
         if action == 'subscribe':
             self.base_url = st.LINE_BASEURL_DICT['notify_authorize']
-            self.redirect_uri = urllib.parse.quote('https://4064-125-228-140-1.ngrok-free.app/auth/notify/callback', safe='')
+            self.redirect_uri = urllib.parse.quote(f'{st.BASE_URL}/auth/notify/callback', safe='')
             self.client_id = st.CHANNEL_ABOUT['notify_id']
             self.headers = {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -79,11 +81,12 @@ class NotifySubScribe:
             self.payload = {
                 'grant_type': 'authorization_code',
                 'code': self.code,
-                'redirect_uri': 'https://4064-125-228-140-1.ngrok-free.app/auth/notify/callback',
+                'redirect_uri': f'{st.BASE_URL}/auth/notify/callback',
                 'client_id': st.CHANNEL_ABOUT['notify_id'],
                 'client_secret': st.CHANNEL_ABOUT['notify_secret'],
             }
         elif action == 'hello':
+            self.access_token = kwargs['access_token']
             self.send_url = st.LINE_BASEURL_DICT['notify_send_message']
             self.headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -95,6 +98,7 @@ class NotifySubScribe:
     
     def return_notify_info(self):
         ret = {'success':True, 'msg':''}
+        print(self.redirect_uri)
         ret['result'] = f"{self.base_url}?response_type=code&client_id={self.client_id}&redirect_uri={self.redirect_uri}&scope=notify&state=123123"
         return ret
     
@@ -118,4 +122,17 @@ class NotifySubScribe:
     
     def send_welcome(self):
         r = requests.post(self.send_url, headers=self.headers, data=self.send_payload)
-        print(r.json())
+        user_id = SystemNotify.objects.get(access_token=self.access_token).user_id
+        write_dict = {
+            'user_id':user_id,
+            'who_send':'system',
+            'message': '哈囉，歡迎使用我的網站訂閱Line Notify \U0001F604',
+            'send_time': arrow.utcnow().to('Asia/Taipei').format('YYYY-MM-DDTHH:mm:ss')
+        }
+        ret = r.json()
+        if ret['status'] == 200:
+            write_dict['success'] = 1
+        else:
+            write_dict['success'] = 0
+            write_dict['error_msg'] = ret["message"]
+        SystemSendDetail.objects.create(**write_dict)

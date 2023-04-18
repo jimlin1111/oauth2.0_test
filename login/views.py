@@ -8,6 +8,7 @@ from login.models import (
     SystemNotify,
     SystemCity,
     SystemCityRefer,
+    SystemSendDetail,
 )
 from django.contrib import auth
 from login.controller import LineLoginClass, NotifySubScribe
@@ -33,7 +34,7 @@ class LineLoginCallbackView(View):
 
         # 用id_token取得身份
         action_next = 'get_profile'
-        user_profile = LineLoginClass(action_next, request).return_profile()
+        user_profile = LineLoginClass(action_next, request, **token_data, **{'client_id':client_id}).return_profile()
 
         # 找是否曾經授權登入過
         try:
