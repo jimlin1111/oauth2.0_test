@@ -58,7 +58,8 @@ class LineLoginCallbackView(View):
             'email': email,
             'is_superuser': 0,
             'is_staff': 0,
-            'is_active':1
+            'is_active':1,
+            'last_name':'front'
         }
         if action == 'register':
             user = User.objects.create(**user_data)
