@@ -13,10 +13,10 @@
 <font color=#FF0000>*註解後啟動專案時會在根目錄多一個 **db.sqlite3** 檔案</font>
 
 ----------
-## sensitive-sample.py參數說明
+## sensitive-sample.py參數說明 ##
 **DATABASE**為資料庫資訊(範例為使用mysql，可自行調整自己慣用的)  
-**CHANNEL_ABOUT**為line login與line notify的channel_id與secret
-**BASE_URL**為此網站的domain，像是https://example.com.tw (最後不用加入/)
+**CHANNEL_ABOUT** 為line login與line notify的channel_id與secret
+**BASE_URL** 為此網站的domain，像是https://example.com.tw (最後不用加入/)
 ----------
 ## [How to active](https://github.com/jimlin1111/oauth2.0_test#how-to-active) ##
 開好python虛擬環境後在根目錄下打下面指令  
