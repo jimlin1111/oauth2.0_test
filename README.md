@@ -8,6 +8,7 @@
 複製成**oauth20/sensitive.py**並填入必要資訊  
 
 若不是則需至**oauth20/settings.py**中將最下面的`from oauth20.sensitive.py import *`註解  
+並將約中段的`DATABASES`參數取消註解
 
 <font color=#FF0000>*註解後啟動專案時會在根目錄多一個 **db.sqlite3** 檔案</font>
 

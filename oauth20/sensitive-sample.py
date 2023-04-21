@@ -18,3 +18,5 @@ CHANNEL_ABOUT = {
     'notify_id': '', # enter your line notify channel id
     'notify_secret': '' # enter your line notify channel secret
 }
+
+BASE_URL = '' # enter your domain like https://example.com.tw
