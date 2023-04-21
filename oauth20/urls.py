@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from login.views import IndexView
+from login.views import IndexView, RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(), name='redirect'),
     path('auth/', include('login.urls', 'auth')),
     path('index',IndexView.as_view(), name='index'),
     path('api/', include('login.api_urls', 'api')),

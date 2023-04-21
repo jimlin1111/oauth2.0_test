@@ -15,7 +15,9 @@ from login.controller import LineLoginClass, NotifySubScribe
 import arrow
 
 # Create your views here.
-
+class RedirectView(View):
+    def get(self, request):
+        return redirect('auth:login')
 class LoginView(View):
     def get(self, request):
         auth.logout(request)
