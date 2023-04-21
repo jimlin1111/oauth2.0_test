@@ -19,7 +19,7 @@
 #
 
 # bind = '0.0.0.0:8000'
-bind = 'unix://var/www/html/oauth-front/oauth2.0_test/front.sock'
+bind = 'unix:/var/www/html/oauth-front/oauth2.0_test/front.sock'
 backlog = 1024
 
 #
