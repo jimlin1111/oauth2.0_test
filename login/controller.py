@@ -11,6 +11,7 @@ class LineLoginClass:
             self.client_id = st.CHANNEL_ABOUT['channel_id']
             self.scope = urllib.parse.quote('openid email profile', safe='')
             self.redirect_uri = urllib.parse.quote(f'{st.BASE_URL}/auth/callback', safe='')
+            self.state = kwargs['state']
         elif action == 'get_at':
             self.code = request.GET.get('code')
             self.client_id = st.CHANNEL_ABOUT['channel_id']
@@ -37,7 +38,7 @@ class LineLoginClass:
     
     def return_login_info(self):
         ret = {'success':True, 'msg':''}
-        ret['result'] = f'{self.base_url}?response_type=code&client_id={self.client_id}&state=123123&scope={self.scope}&redirect_uri={self.redirect_uri}'
+        ret['result'] = f'{self.base_url}?response_type=code&client_id={self.client_id}&state={self.state}&scope={self.scope}&redirect_uri={self.redirect_uri}'
 
         return ret
     

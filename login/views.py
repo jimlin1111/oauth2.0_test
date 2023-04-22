@@ -13,6 +13,7 @@ from login.models import (
 from django.contrib import auth
 from login.controller import LineLoginClass, NotifySubScribe
 import arrow
+import uuid
 
 # Create your views here.
 class RedirectView(View):
@@ -24,13 +25,22 @@ class LoginView(View):
         return render(request, 'auth/login.html')
     def post(self, request):
         action = request.POST.get('action')
-        response = LineLoginClass(action, request).return_login_info()
+        state = str(uuid.uuid4()).replace('/','-')
+        request.session['state'] = state
+        response = LineLoginClass(action, request, **{'state':state}).return_login_info()
         return JsonResponse(response)
         
 class LineLoginCallbackView(View):
     def get(self, request):
         # 取得access_token相關資訊
         action = 'get_at'
+        state_session = request.session['state']
+        state = request.GET.get('state','')
+        # 比對是否同一個state，防止被DDOS
+        if state_session!=state:
+            return JsonResponse({'success':False, 'msg':f'Invalid state parameter'})
+        else:
+            del request.session['state']
         token_data, client_id = LineLoginClass(action, request).return_access_token()
         now = arrow.utcnow().to('Asia/Taipei').shift(seconds=token_data['expires_in']).format('YYYY-MM-DD HH:mm:ss')
 
